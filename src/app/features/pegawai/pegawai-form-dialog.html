@@ -1,0 +1,97 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Edit Pegawai' : 'Tambah Pegawai' }}</h2>
+
+@if (saving()) {
+  <mat-progress-bar mode="indeterminate" />
+}
+
+<mat-dialog-content>
+  @if (errorMessage(); as message) {
+    <div class="alert" role="alert">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ message }}</span>
+    </div>
+  }
+
+  <form class="form-grid" [formGroup]="form" (ngSubmit)="save()">
+    <mat-form-field appearance="outline">
+      <mat-label>NIP</mat-label>
+      <input matInput formControlName="nip" maxlength="30" autocomplete="off" />
+      @if (form.controls.nip.hasError('required')) {
+        <mat-error>NIP wajib diisi.</mat-error>
+      } @else if (form.controls.nip.hasError('maxlength')) {
+        <mat-error>NIP maksimal 30 karakter.</mat-error>
+      } @else if (form.controls.nip.hasError('duplicate')) {
+        <mat-error>NIP sudah terdaftar. Gunakan NIP lain.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Nama Lengkap</mat-label>
+      <input matInput formControlName="nama" maxlength="150" autocomplete="off" />
+      @if (form.controls.nama.hasError('required')) {
+        <mat-error>Nama wajib diisi.</mat-error>
+      } @else if (form.controls.nama.hasError('maxlength')) {
+        <mat-error>Nama maksimal 150 karakter.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Tanggal Lahir</mat-label>
+      <input
+        matInput
+        formControlName="tanggal_lahir"
+        [matDatepicker]="picker"
+        [max]="maxBirthDate"
+        autocomplete="off"
+      />
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      @if (form.controls.tanggal_lahir.hasError('required')) {
+        <mat-error>Tanggal lahir wajib diisi.</mat-error>
+      } @else if (form.controls.tanggal_lahir.hasError('past')) {
+        <mat-error>Tanggal lahir harus sebelum hari ini.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Gender</mat-label>
+      <mat-select formControlName="gender">
+        <mat-option value="male">Laki-laki</mat-option>
+        <mat-option value="female">Perempuan</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" formControlName="email" maxlength="150" autocomplete="off" />
+      @if (form.controls.email.hasError('email')) {
+        <mat-error>Format email tidak valid.</mat-error>
+      } @else if (form.controls.email.hasError('maxlength')) {
+        <mat-error>Email maksimal 150 karakter.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>No. Telepon</mat-label>
+      <input matInput formControlName="no_telepon" maxlength="30" autocomplete="off" />
+      @if (form.controls.no_telepon.hasError('maxlength')) {
+        <mat-error>No. telepon maksimal 30 karakter.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Alamat</mat-label>
+      <textarea matInput formControlName="alamat" rows="3" maxlength="2000"></textarea>
+      @if (form.controls.alamat.hasError('maxlength')) {
+        <mat-error>Alamat maksimal 2000 karakter.</mat-error>
+      }
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" mat-dialog-close [disabled]="saving()">Batal</button>
+  <button mat-flat-button type="button" [disabled]="saving()" (click)="save()">
+    {{ isEdit ? 'Simpan Perubahan' : 'Simpan' }}
+  </button>
+</mat-dialog-actions>

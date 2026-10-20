@@ -1,59 +1,65 @@
-# Untitled
+# Admin Pegawai
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.3.
+Frontend admin dashboard untuk backend pegawai Spring Boot di
+`/home/agungdh/IdeaProjects/demo`. Dibangun dengan Angular 22 dan Angular Material 3.
 
-## Development server
+## Fitur
 
-To start a local development server, run:
+- Layout admin dengan sidebar responsif (mode `side` di desktop, `over` di mobile).
+- Halaman dashboard berisi shortcut dan 5 data pegawai terbaru.
+- CRUD pegawai: daftar, pencarian server-side (nama/NIP), tambah, edit, dan hapus (soft delete).
+- Pagination cursor mengikuti API backend (20 data per halaman, tombol sebelumnya/berikutnya).
+- Form reaktif dengan validasi yang sama seperti backend, datepicker locale `id-ID`,
+  penanganan NIP duplikat (409), dan snackbar notifikasi.
 
-```bash
-ng serve
-```
+## Menjalankan
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Backend harus berjalan di `http://localhost:8080`.
 
 ```bash
-ng generate --help
+# di repo backend
+docker compose up -d
+./gradlew bootRun
+
+# opsional: isi 1000 data dummy
+make seed
 ```
 
-## Building
-
-To build the project run:
+Lalu jalankan frontend:
 
 ```bash
-ng build
+npm install
+npm start
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Buka `http://localhost:4200/`. CORS backend sudah mengizinkan semua port localhost,
+jadi frontend memanggil API secara langsung tanpa proxy.
 
-## Running unit tests
+Base URL API diatur lewat token `API_BASE_URL` di `src/app/app.config.ts`.
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## Perintah
 
 ```bash
-ng test
+npm start        # dev server di port 4200
+npm run build    # production build ke dist/
+npm test         # unit test (Vitest)
 ```
 
-## Running end-to-end tests
+## Struktur
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
+```
+src/app/
+├── core/                 # model, service HTTP, error helper, date adapter
+├── layout/               # shell admin: sidebar + topbar
+└── features/
+    ├── dashboard/        # ringkasan dan pegawai terbaru
+    └── pegawai/          # tabel, form dialog, dialog konfirmasi hapus
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Catatan API
 
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- Response dan request memakai JSON snake_case (`tanggal_lahir`, `no_telepon`, dst).
+- Identifier publik adalah `uuid`; numeric id tidak pernah dipakai di frontend.
+- Daftar memakai cursor pagination: kirim `next_cursor` dari response sebelumnya sebagai `cursor`.
+- Pencarian backend mencocokkan `lower(nama)` dan `nip`; NIP yang mengandung huruf
+  besar tidak akan cocok karena backend me-lowercase pola pencariannya.

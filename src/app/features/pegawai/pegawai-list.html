@@ -1,0 +1,157 @@
+<section class="page-head">
+  <div>
+    <h1>Pegawai</h1>
+    <p>Kelola data pegawai: cari, tambah, edit, dan hapus.</p>
+  </div>
+  <button mat-flat-button type="button" (click)="openCreate()">
+    <mat-icon>add</mat-icon>
+    Tambah Pegawai
+  </button>
+</section>
+
+<div class="toolbar">
+  <mat-form-field appearance="outline" class="search-field" subscriptSizing="dynamic">
+    <mat-label>Cari pegawai</mat-label>
+    <mat-icon matPrefix>search</mat-icon>
+    <input
+      matInput
+      type="search"
+      placeholder="Nama atau NIP"
+      [formControl]="searchControl"
+      aria-label="Cari pegawai berdasarkan nama atau NIP"
+    />
+    @if (searchControl.value) {
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        aria-label="Bersihkan pencarian"
+        (click)="clearSearch()"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    }
+  </mat-form-field>
+</div>
+
+@if (error(); as message) {
+  <div class="alert" role="alert">
+    <mat-icon>error_outline</mat-icon>
+    <span>{{ message }}</span>
+    <button mat-button type="button" (click)="load()">Coba lagi</button>
+  </div>
+}
+
+<section class="table-card">
+  @if (loading()) {
+    <mat-progress-bar mode="indeterminate" />
+  }
+
+  <div class="table-wrap">
+    <table mat-table [dataSource]="rows()" class="pegawai-table">
+      <ng-container matColumnDef="nip">
+        <th mat-header-cell *matHeaderCellDef>NIP</th>
+        <td mat-cell *matCellDef="let row">{{ row.nip }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="nama">
+        <th mat-header-cell *matHeaderCellDef>Nama</th>
+        <td mat-cell *matCellDef="let row" class="nama-cell">
+          <span class="nama">{{ row.nama }}</span>
+          <span class="nip-mobile">{{ row.nip }}</span>
+          @if (row.alamat) {
+            <span class="alamat">{{ row.alamat }}</span>
+          }
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="tanggal_lahir">
+        <th mat-header-cell *matHeaderCellDef>Tanggal Lahir</th>
+        <td mat-cell *matCellDef="let row">{{ formatTanggal(row.tanggal_lahir) }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="gender">
+        <th mat-header-cell *matHeaderCellDef>Gender</th>
+        <td mat-cell *matCellDef="let row">
+          <span class="chip" [class.chip-female]="row.gender === 'female'">
+            {{ genderLabel(row.gender) }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="kontak">
+        <th mat-header-cell *matHeaderCellDef>Kontak</th>
+        <td mat-cell *matCellDef="let row">
+          <div class="contact">
+            <span>{{ row.email || '-' }}</span>
+            <span class="muted">{{ row.no_telepon || '-' }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="aksi">
+        <th mat-header-cell *matHeaderCellDef class="aksi-head">Aksi</th>
+        <td mat-cell *matCellDef="let row" class="aksi-cell">
+          <button
+            mat-icon-button
+            type="button"
+            matTooltip="Edit pegawai"
+            [attr.aria-label]="'Edit ' + row.nama"
+            (click)="openEdit(row)"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            type="button"
+            class="danger"
+            matTooltip="Hapus pegawai"
+            [attr.aria-label]="'Hapus ' + row.nama"
+            (click)="deleteRow(row)"
+          >
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columns"></tr>
+      <tr mat-row *matRowDef="let row; columns: columns"></tr>
+
+      <tr class="no-data-row" *matNoDataRow>
+        <td [attr.colspan]="columns.length">
+          @if (loading()) {
+            Memuat data pegawai...
+          } @else if (searchControl.value) {
+            Tidak ada pegawai yang cocok dengan "{{ searchControl.value }}".
+          } @else {
+            Belum ada data pegawai.
+          }
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <footer class="pagination">
+    <span class="page-info">Halaman {{ pageIndex() }} · maks. 20 data</span>
+    <div class="pagination-actions">
+      <button
+        mat-stroked-button
+        type="button"
+        [disabled]="!canPrevious() || loading()"
+        (click)="previousPage()"
+      >
+        <mat-icon>chevron_left</mat-icon>
+        Sebelumnya
+      </button>
+      <button
+        mat-stroked-button
+        type="button"
+        [disabled]="!nextCursor() || loading()"
+        (click)="nextPage()"
+      >
+        Berikutnya
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+  </footer>
+</section>

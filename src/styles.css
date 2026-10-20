@@ -1,1 +1,22 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global styles. Component-level styles live next to each component. */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+.snackbar-error {
+  --mdc-snackbar-container-color: var(--mat-sys-error-container);
+  --mdc-snackbar-supporting-text-color: var(--mat-sys-on-error-container);
+  --mat-snack-bar-button-color: var(--mat-sys-on-error-container);
+}
+
+/* Keep the sidebar footer pinned to the bottom of the drawer. */
+.sidebar .mat-drawer-inner-container {
+  display: flex;
+  flex-direction: column;
+}

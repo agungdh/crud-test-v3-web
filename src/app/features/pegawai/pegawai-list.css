@@ -1,0 +1,198 @@
+.page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.page-head h1 {
+  margin: 0 0 4px;
+  font: var(--mat-sys-headline-medium);
+}
+
+.page-head p {
+  margin: 0;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.search-field {
+  width: 100%;
+  max-width: 420px;
+}
+
+.alert {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+}
+
+.alert span {
+  flex: 1;
+}
+
+.table-card {
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 16px;
+  background: var(--mat-sys-surface-container-low);
+  overflow: hidden;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.pegawai-table {
+  width: 100%;
+  min-width: 760px;
+  background: transparent;
+}
+
+.nama-cell {
+  padding-block: 10px;
+}
+
+.nama {
+  display: block;
+  font-weight: 500;
+}
+
+.nip-mobile {
+  display: none;
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-small);
+}
+
+.alamat {
+  display: block;
+  max-width: 280px;
+  overflow: hidden;
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-small);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chip {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+  font: var(--mat-sys-label-small);
+}
+
+.chip-female {
+  background: var(--mat-sys-tertiary-container);
+  color: var(--mat-sys-on-tertiary-container);
+}
+
+.contact {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.4;
+}
+
+.muted {
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-small);
+}
+
+.aksi-head,
+.aksi-cell {
+  text-align: right;
+}
+
+.aksi-cell {
+  white-space: nowrap;
+}
+
+.danger {
+  color: var(--mat-sys-error);
+}
+
+.no-data-row td {
+  padding: 32px 16px;
+  color: var(--mat-sys-on-surface-variant);
+  text-align: center;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+}
+
+.page-info {
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-small);
+}
+
+.pagination-actions {
+  display: flex;
+  gap: 8px;
+}
+
+@media (max-width: 899px) {
+  .mat-column-kontak {
+    display: none;
+  }
+}
+
+@media (max-width: 599px) {
+  .page-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .page-head button {
+    width: 100%;
+  }
+
+  .pegawai-table {
+    min-width: 100%;
+    table-layout: fixed;
+  }
+
+  .mat-column-aksi {
+    width: 112px;
+  }
+
+  .alamat {
+    max-width: 100%;
+  }
+
+  .mat-column-nip,
+  .mat-column-tanggal_lahir,
+  .mat-column-gender {
+    display: none;
+  }
+
+  .nip-mobile {
+    display: block;
+  }
+
+  .pagination {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .pagination-actions button {
+    flex: 1;
+  }
+}

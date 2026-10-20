@@ -1,0 +1,63 @@
+<mat-sidenav-container class="shell">
+  <mat-sidenav
+    class="sidebar"
+    [mode]="isMobile() ? 'over' : 'side'"
+    [opened]="sidenavOpen()"
+    (openedChange)="sidenavOpen.set($event)"
+  >
+    <div class="brand">
+      <mat-icon class="brand-icon">admin_panel_settings</mat-icon>
+      <div class="brand-text">
+        <strong>Admin Panel</strong>
+        <span>Demo Pegawai</span>
+      </div>
+    </div>
+
+    <mat-nav-list class="nav">
+      <a
+        mat-list-item
+        routerLink="/dashboard"
+        routerLinkActive="active-link"
+        (click)="closeIfMobile()"
+      >
+        <mat-icon matListItemIcon>dashboard</mat-icon>
+        <span matListItemTitle>Dashboard</span>
+      </a>
+      <a
+        mat-list-item
+        routerLink="/pegawai"
+        routerLinkActive="active-link"
+        (click)="closeIfMobile()"
+      >
+        <mat-icon matListItemIcon>groups</mat-icon>
+        <span matListItemTitle>Pegawai</span>
+      </a>
+    </mat-nav-list>
+
+    <div class="sidebar-footer">
+      <span>Angular 22 · Material 3</span>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar class="topbar">
+      <button
+        mat-icon-button
+        type="button"
+        aria-label="Buka atau tutup menu"
+        (click)="sidenavOpen.set(!sidenavOpen())"
+      >
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="page-title">{{ pageTitle() }}</span>
+      <span class="spacer"></span>
+      <button mat-icon-button type="button" aria-label="Akun pengguna">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <main class="content">
+      <router-outlet />
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

@@ -1,0 +1,148 @@
+.page-head {
+  margin-bottom: 24px;
+}
+
+.page-head h1 {
+  margin: 0 0 4px;
+  font: var(--mat-sys-headline-medium);
+}
+
+.page-head p,
+.panel-head p {
+  margin: 0;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.shortcuts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.shortcut {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 16px;
+  background: var(--mat-sys-surface-container-low);
+  color: inherit;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.shortcut:hover {
+  border-color: var(--mat-sys-primary);
+  background: var(--mat-sys-surface-container-high);
+}
+
+.shortcut-icon {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+}
+
+.shortcut-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.shortcut-text strong {
+  font: var(--mat-sys-title-small);
+}
+
+.shortcut-text span {
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-small);
+}
+
+.chevron {
+  margin-left: auto;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.panel {
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 16px;
+  background: var(--mat-sys-surface-container-low);
+  overflow: hidden;
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px;
+}
+
+.panel-head h2 {
+  margin: 0 0 2px;
+  font: var(--mat-sys-title-medium);
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.latest-table {
+  width: 100%;
+  background: transparent;
+}
+
+.alert {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 20px 20px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+}
+
+.alert span {
+  flex: 1;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 40px 20px;
+  color: var(--mat-sys-on-surface-variant);
+  text-align: center;
+}
+
+.empty mat-icon {
+  width: 40px;
+  height: 40px;
+  font-size: 40px;
+}
+
+.empty p {
+  margin: 0;
+}
+
+@media (max-width: 599px) {
+  .panel-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .mat-column-gender {
+    display: none;
+  }
+}
