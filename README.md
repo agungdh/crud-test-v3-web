@@ -8,7 +8,7 @@ Frontend admin dashboard untuk backend pegawai Spring Boot di
 - Layout admin dengan sidebar responsif (mode `side` di desktop, `over` di mobile).
 - Halaman dashboard berisi shortcut dan 5 data pegawai terbaru.
 - CRUD pegawai: daftar, pencarian server-side (nama/NIP), tambah, edit, dan hapus (soft delete).
-- Pagination cursor mengikuti API backend (20 data per halaman, tombol sebelumnya/berikutnya).
+- Infinite scroll: data halaman berikutnya dimuat otomatis saat mendekati bawah daftar.
 - Form reaktif dengan validasi yang sama seperti backend, datepicker locale `id-ID`,
   penanganan NIP duplikat (409), dan snackbar notifikasi.
 

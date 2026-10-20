@@ -121,6 +121,8 @@
         <td [attr.colspan]="columns.length">
           @if (loading()) {
             Memuat data pegawai...
+          } @else if (error()) {
+            Gagal memuat data. Coba lagi.
           } @else if (searchControl.value) {
             Tidak ada pegawai yang cocok dengan "{{ searchControl.value }}".
           } @else {
@@ -131,27 +133,20 @@
     </table>
   </div>
 
-  <footer class="pagination">
-    <span class="page-info">Halaman {{ pageIndex() }} · maks. 20 data</span>
-    <div class="pagination-actions">
-      <button
-        mat-stroked-button
-        type="button"
-        [disabled]="!canPrevious() || loading()"
-        (click)="previousPage()"
-      >
-        <mat-icon>chevron_left</mat-icon>
-        Sebelumnya
-      </button>
-      <button
-        mat-stroked-button
-        type="button"
-        [disabled]="!nextCursor() || loading()"
-        (click)="nextPage()"
-      >
-        Berikutnya
-        <mat-icon>chevron_right</mat-icon>
-      </button>
+  <div #sentinel class="scroll-sentinel" aria-hidden="true"></div>
+
+  @if (loadingMore()) {
+    <div class="load-more">
+      <mat-progress-bar mode="indeterminate" />
+      <span>Memuat data lainnya...</span>
     </div>
-  </footer>
+  } @else if (loadMoreError(); as message) {
+    <div class="load-more-error" role="alert">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ message }}</span>
+      <button mat-button type="button" (click)="retryLoadMore()">Coba lagi</button>
+    </div>
+  } @else if (!loading() && !hasMore() && rows().length > 0) {
+    <div class="end-of-list">Semua data sudah dimuat.</div>
+  }
 </section>

@@ -20,7 +20,10 @@ import { PegawaiService } from '../../core/api/pegawai.service';
 import { Gender, Pegawai, PegawaiRequest } from '../../core/models/pegawai';
 import { parseIsoDate, toIsoDate, yesterday } from '../../core/utils/date';
 
-export type DialogResult = 'created' | 'updated';
+export interface DialogResult {
+  action: 'created' | 'updated';
+  pegawai: Pegawai;
+}
 
 function pastDateValidator(control: AbstractControl): ValidationErrors | null {
   const value = control.value as Date | null;
@@ -120,7 +123,11 @@ export class PegawaiFormDialog {
       : this.pegawaiService.create(request);
 
     operation.subscribe({
-      next: () => this.dialogRef.close(this.data ? 'updated' : 'created'),
+      next: (pegawai) =>
+        this.dialogRef.close({
+          action: this.data ? 'updated' : 'created',
+          pegawai,
+        }),
       error: (error: unknown) => {
         this.saving.set(false);
 
