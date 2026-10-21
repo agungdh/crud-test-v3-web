@@ -1,7 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CursorPage, Pegawai, PegawaiRequest } from '../models/pegawai';
+import { CursorPage } from '../models/api';
+import { Pegawai, PegawaiRequest } from '../models/pegawai';
 import { API_BASE_URL } from './api.config';
 
 export interface PegawaiListOptions {

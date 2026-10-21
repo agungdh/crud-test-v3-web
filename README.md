@@ -6,11 +6,18 @@ Frontend admin dashboard untuk backend pegawai Spring Boot di
 ## Fitur
 
 - Layout admin dengan sidebar responsif (mode `side` di desktop, `over` di mobile).
-- Halaman dashboard berisi shortcut dan 5 data pegawai terbaru.
+- Halaman dashboard berisi shortcut, tautan ke semua jenis kegiatan, dan 5 data pegawai terbaru.
 - CRUD pegawai: daftar, pencarian server-side (nama/NIP), tambah, edit, dan hapus (soft delete).
-- Infinite scroll: data halaman berikutnya dimuat otomatis saat mendekati bawah daftar.
+- CRUD jenis pelatihan sebagai lookup untuk data diklat.
+- CRUD 9 resource kegiatan: diklat, PPM, seminar, webinar, LC, belajar mandiri,
+  mentoring, coaching, dan workshop.
+- Setiap daftar kegiatan mendukung pencarian server-side, filter pegawai, dan
+  infinite scroll. Filter pegawai disimpan di query param `pegawai_uuid` sehingga
+  bisa dibuka langsung dari daftar pegawai.
+- Form kegiatan menyesuaikan field per resource: nomor surat (diklat/PPM),
+  rentang tanggal dan jenis pelatihan (diklat), serta jumlah jam.
 - Form reaktif dengan validasi yang sama seperti backend, datepicker locale `id-ID`,
-  penanganan NIP duplikat (409), dan snackbar notifikasi.
+  penanganan NIP duplikat (409), validasi rentang tanggal diklat, dan snackbar notifikasi.
 
 ## Menjalankan
 
@@ -49,17 +56,45 @@ npm test         # unit test (Vitest)
 
 ```
 src/app/
-├── core/                 # model, service HTTP, error helper, date adapter
-├── layout/               # shell admin: sidebar + topbar
+├── core/
+│   ├── api/       # service HTTP per resource + cache nama pegawai
+│   ├── config/    # metadata 9 jenis kegiatan (slug, label, icon, varian field)
+│   ├── models/    # tipe request/response dan cursor page
+│   ├── ui/        # dialog konfirmasi generik
+│   └── utils/     # helper tanggal dan validator
+├── layout/        # shell admin: sidebar + topbar
 └── features/
-    ├── dashboard/        # ringkasan dan pegawai terbaru
-    └── pegawai/          # tabel, form dialog, dialog konfirmasi hapus
+    ├── dashboard/         # ringkasan dan pegawai terbaru
+    ├── jenis-pelatihan/   # tabel, form dialog, dan hapus
+    ├── kegiatan/          # satu komponen generik untuk 9 resource
+    └── pegawai/           # tabel, form dialog, dan dialog konfirmasi hapus
 ```
+
+## Rute
+
+| Rute                                                       | Keterangan                                      |
+| ---------------------------------------------------------- | ----------------------------------------------- |
+| `/dashboard`                                               | Ringkasan data                                  |
+| `/pegawai`                                                 | CRUD pegawai                                    |
+| `/jenis-pelatihan`                                         | CRUD lookup jenis pelatihan                     |
+| `/diklat`                                                  | CRUD diklat (rentang tanggal + jenis pelatihan) |
+| `/ppm`                                                     | CRUD PPM                                        |
+| `/seminar`, `/webinar`, `/lc`                              | CRUD kegiatan sederhana                         |
+| `/belajar-mandiri`, `/mentoring`, `/coaching`, `/workshop` | CRUD kegiatan sederhana                         |
 
 ## Catatan API
 
 - Response dan request memakai JSON snake_case (`tanggal_lahir`, `no_telepon`, dst).
 - Identifier publik adalah `uuid`; numeric id tidak pernah dipakai di frontend.
-- Daftar memakai cursor pagination: kirim `next_cursor` dari response sebelumnya sebagai `cursor`.
-- Pencarian backend mencocokkan `lower(nama)` dan `nip`; NIP yang mengandung huruf
+- Semua daftar memakai cursor pagination: kirim `next_cursor` dari response sebelumnya
+  sebagai `cursor`. Halaman berisi maksimal 20 baris.
+- Pencarian pegawai mencocokkan `lower(nama)` dan `nip`; NIP yang mengandung huruf
   besar tidak akan cocok karena backend me-lowercase pola pencariannya.
+- Setiap endpoint kegiatan menerima `search` (materi pengembangan; diklat dan PPM juga
+  nomor surat) dan `pegawai_uuid`.
+- Nama field jam berbeda: `jumlah_jam` untuk seminar/webinar/LC/belajar mandiri/
+  mentoring/coaching/workshop, dan `jumlah_jam_pelatihan` untuk diklat/PPM.
+- Diklat memakai `dari_tanggal_pelaksanaan` dan `sampai_tanggal_pelaksanaan`; resource
+  lain memakai `tanggal_pelaksanaan`. Backend menolak rentang terbalik dengan `400`.
+- Response kegiatan hanya mengembalikan `pegawai_uuid`, jadi frontend mengambil nama
+  pegawai lewat cache `PegawaiDirectoryService` untuk kolom daftar.

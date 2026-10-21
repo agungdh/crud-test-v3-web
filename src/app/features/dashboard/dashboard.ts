@@ -7,6 +7,7 @@ import { RouterLink } from '@angular/router';
 import { API_BASE_URL } from '../../core/api/api.config';
 import { apiErrorMessage } from '../../core/api/error';
 import { PegawaiService } from '../../core/api/pegawai.service';
+import { KEGIATAN_TYPES } from '../../core/config/kegiatan-types';
 import { GENDER_LABELS, Gender, Pegawai } from '../../core/models/pegawai';
 import { formatTanggal } from '../../core/utils/date';
 
@@ -22,6 +23,7 @@ export class Dashboard {
   private readonly baseUrl = inject(API_BASE_URL);
 
   protected readonly swaggerUrl = `${this.baseUrl}/swagger-ui.html`;
+  protected readonly kegiatanTypes = KEGIATAN_TYPES;
   protected readonly columns = ['nip', 'nama', 'tanggal_lahir', 'gender'];
   protected readonly formatTanggal = formatTanggal;
 

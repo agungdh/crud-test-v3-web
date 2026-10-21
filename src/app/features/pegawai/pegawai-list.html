@@ -95,6 +95,15 @@
           <button
             mat-icon-button
             type="button"
+            matTooltip="Lihat kegiatan pegawai"
+            [attr.aria-label]="'Lihat kegiatan ' + row.nama"
+            (click)="openKegiatan(row)"
+          >
+            <mat-icon>assignment</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            type="button"
             matTooltip="Edit pegawai"
             [attr.aria-label]="'Edit ' + row.nama"
             (click)="openEdit(row)"

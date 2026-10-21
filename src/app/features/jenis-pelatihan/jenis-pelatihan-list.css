@@ -1,0 +1,134 @@
+.page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.page-head h1 {
+  margin: 0 0 4px;
+  font: var(--mat-sys-headline-medium);
+}
+
+.page-head p {
+  margin: 0;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.search-field {
+  width: 100%;
+  max-width: 420px;
+}
+
+.alert {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+}
+
+.alert span {
+  flex: 1;
+}
+
+.table-card {
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 16px;
+  background: var(--mat-sys-surface-container-low);
+  overflow: hidden;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.jenis-table {
+  width: 100%;
+  min-width: 480px;
+  background: transparent;
+}
+
+.aksi-head,
+.aksi-cell {
+  text-align: right;
+}
+
+.aksi-cell {
+  white-space: nowrap;
+}
+
+.danger {
+  color: var(--mat-sys-error);
+}
+
+.no-data-row td {
+  padding: 32px 16px;
+  color: var(--mat-sys-on-surface-variant);
+  text-align: center;
+}
+
+.scroll-sentinel {
+  height: 1px;
+}
+
+.load-more {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 16px 16px;
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-small);
+  text-align: center;
+}
+
+.load-more-error {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  color: var(--mat-sys-error);
+}
+
+.load-more-error span {
+  flex: 1;
+}
+
+.end-of-list {
+  padding: 14px 16px;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-small);
+  text-align: center;
+}
+
+@media (max-width: 599px) {
+  .page-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .page-head button {
+    width: 100%;
+  }
+
+  .jenis-table {
+    min-width: 100%;
+  }
+
+  .mat-column-aksi {
+    width: 112px;
+  }
+}

@@ -8,6 +8,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter, map, startWith } from 'rxjs';
+import { KEGIATAN_TYPES } from '../core/config/kegiatan-types';
 
 @Component({
   selector: 'app-admin-layout',
@@ -33,6 +34,8 @@ export class AdminLayout {
     this.breakpointObserver.observe('(max-width: 959px)').pipe(map((result) => result.matches)),
     { initialValue: false },
   );
+
+  protected readonly kegiatanTypes = KEGIATAN_TYPES;
 
   protected readonly sidenavOpen = linkedSignal(() => !this.isMobile());
 

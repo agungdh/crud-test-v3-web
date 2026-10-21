@@ -1,0 +1,167 @@
+<h2 mat-dialog-title>
+  {{ isEdit ? 'Edit ' + config.label : 'Tambah ' + config.label }}
+</h2>
+
+@if (saving()) {
+  <mat-progress-bar mode="indeterminate" />
+}
+
+<mat-dialog-content>
+  @if (errorMessage(); as message) {
+    <div class="alert" role="alert">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ message }}</span>
+    </div>
+  }
+
+  <form class="form-grid" [formGroup]="form" (ngSubmit)="save()">
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Pegawai</mat-label>
+      <mat-icon matPrefix>person_search</mat-icon>
+      <input
+        matInput
+        formControlName="pegawai"
+        [matAutocomplete]="pegawaiAuto"
+        placeholder="Cari nama atau NIP"
+        autocomplete="off"
+        (focus)="onPegawaiFocus()"
+      />
+      <mat-autocomplete #pegawaiAuto="matAutocomplete" [displayWith]="displayPegawai">
+        @for (pegawai of pegawaiOptions(); track pegawai.uuid) {
+          <mat-option [value]="pegawai">{{ pegawai.nama }} — {{ pegawai.nip }}</mat-option>
+        }
+        @if (pegawaiOptions().length === 0) {
+          <mat-option disabled>Tidak ada pegawai yang cocok.</mat-option>
+        }
+      </mat-autocomplete>
+      @if (form.controls.pegawai.hasError('required')) {
+        <mat-error>Pegawai wajib dipilih.</mat-error>
+      }
+    </mat-form-field>
+
+    @if (config.hasJenisPelatihan) {
+      <mat-form-field appearance="outline">
+        <mat-label>Jenis Pelatihan</mat-label>
+        <input
+          matInput
+          formControlName="jenis_pelatihan"
+          [matAutocomplete]="jenisPelatihanAuto"
+          placeholder="Cari jenis pelatihan"
+          autocomplete="off"
+          (focus)="onJenisPelatihanFocus()"
+        />
+        <mat-autocomplete
+          #jenisPelatihanAuto="matAutocomplete"
+          [displayWith]="displayJenisPelatihan"
+        >
+          @for (jenis of jenisPelatihanOptions(); track jenis.uuid) {
+            <mat-option [value]="jenis">{{ jenis.nama }}</mat-option>
+          }
+          @if (jenisPelatihanOptions().length === 0) {
+            <mat-option disabled>Tidak ada jenis pelatihan yang cocok.</mat-option>
+          }
+        </mat-autocomplete>
+        @if (form.controls.jenis_pelatihan.hasError('required')) {
+          <mat-error>Jenis pelatihan wajib dipilih.</mat-error>
+        }
+      </mat-form-field>
+    }
+
+    @if (config.hasNomorSurat) {
+      <mat-form-field appearance="outline">
+        <mat-label>Nomor Surat</mat-label>
+        <input matInput formControlName="nomor_surat" maxlength="150" autocomplete="off" />
+        @if (
+          form.controls.nomor_surat.hasError('required') ||
+          form.controls.nomor_surat.hasError('blank')
+        ) {
+          <mat-error>Nomor surat wajib diisi.</mat-error>
+        } @else if (form.controls.nomor_surat.hasError('maxlength')) {
+          <mat-error>Nomor surat maksimal 150 karakter.</mat-error>
+        }
+      </mat-form-field>
+    }
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Materi Pengembangan</mat-label>
+      <input matInput formControlName="materi_pengembangan" maxlength="255" autocomplete="off" />
+      @if (
+        form.controls.materi_pengembangan.hasError('required') ||
+        form.controls.materi_pengembangan.hasError('blank')
+      ) {
+        <mat-error>Materi pengembangan wajib diisi.</mat-error>
+      } @else if (form.controls.materi_pengembangan.hasError('maxlength')) {
+        <mat-error>Materi pengembangan maksimal 255 karakter.</mat-error>
+      }
+    </mat-form-field>
+
+    @if (config.hasDateRange) {
+      <mat-form-field appearance="outline">
+        <mat-label>Dari Tanggal</mat-label>
+        <input
+          matInput
+          formControlName="dari_tanggal_pelaksanaan"
+          [matDatepicker]="dariPicker"
+          autocomplete="off"
+        />
+        <mat-datepicker-toggle matIconSuffix [for]="dariPicker" />
+        <mat-datepicker #dariPicker />
+        @if (form.controls.dari_tanggal_pelaksanaan.hasError('required')) {
+          <mat-error>Tanggal mulai wajib diisi.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Sampai Tanggal</mat-label>
+        <input
+          matInput
+          formControlName="sampai_tanggal_pelaksanaan"
+          [matDatepicker]="sampaiPicker"
+          autocomplete="off"
+        />
+        <mat-datepicker-toggle matIconSuffix [for]="sampaiPicker" />
+        <mat-datepicker #sampaiPicker />
+        @if (form.controls.sampai_tanggal_pelaksanaan.hasError('required')) {
+          <mat-error>Tanggal selesai wajib diisi.</mat-error>
+        } @else if (form.hasError('dateRange')) {
+          <mat-error>Tanggal mulai tidak boleh setelah tanggal selesai.</mat-error>
+        }
+      </mat-form-field>
+    } @else {
+      <mat-form-field appearance="outline">
+        <mat-label>Tanggal Pelaksanaan</mat-label>
+        <input
+          matInput
+          formControlName="tanggal_pelaksanaan"
+          [matDatepicker]="tanggalPicker"
+          autocomplete="off"
+        />
+        <mat-datepicker-toggle matIconSuffix [for]="tanggalPicker" />
+        <mat-datepicker #tanggalPicker />
+        @if (form.controls.tanggal_pelaksanaan.hasError('required')) {
+          <mat-error>Tanggal pelaksanaan wajib diisi.</mat-error>
+        }
+      </mat-form-field>
+    }
+
+    <mat-form-field appearance="outline">
+      <mat-label>{{ config.hasNomorSurat ? 'Jumlah Jam Pelatihan' : 'Jumlah Jam' }}</mat-label>
+      <input matInput type="number" min="0" step="1" formControlName="jumlah_jam" />
+      <span matSuffix>jam</span>
+      @if (form.controls.jumlah_jam.hasError('required')) {
+        <mat-error>Jumlah jam wajib diisi.</mat-error>
+      } @else if (form.controls.jumlah_jam.hasError('min')) {
+        <mat-error>Jumlah jam tidak boleh negatif.</mat-error>
+      } @else if (form.controls.jumlah_jam.hasError('integer')) {
+        <mat-error>Jumlah jam harus bilangan bulat.</mat-error>
+      }
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" mat-dialog-close [disabled]="saving()">Batal</button>
+  <button mat-flat-button type="button" [disabled]="saving()" (click)="save()">
+    {{ isEdit ? 'Simpan Perubahan' : 'Simpan' }}
+  </button>
+</mat-dialog-actions>

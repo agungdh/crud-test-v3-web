@@ -32,6 +32,32 @@
         <mat-icon matListItemIcon>groups</mat-icon>
         <span matListItemTitle>Pegawai</span>
       </a>
+
+      <div mat-subheader class="nav-section">Master</div>
+
+      <a
+        mat-list-item
+        routerLink="/jenis-pelatihan"
+        routerLinkActive="active-link"
+        (click)="closeIfMobile()"
+      >
+        <mat-icon matListItemIcon>category</mat-icon>
+        <span matListItemTitle>Jenis Pelatihan</span>
+      </a>
+
+      <div mat-subheader class="nav-section">Kegiatan</div>
+
+      @for (kegiatan of kegiatanTypes; track kegiatan.slug) {
+        <a
+          mat-list-item
+          [routerLink]="['/', kegiatan.slug]"
+          routerLinkActive="active-link"
+          (click)="closeIfMobile()"
+        >
+          <mat-icon matListItemIcon>{{ kegiatan.icon }}</mat-icon>
+          <span matListItemTitle>{{ kegiatan.label }}</span>
+        </a>
+      }
     </mat-nav-list>
 
     <div class="sidebar-footer">

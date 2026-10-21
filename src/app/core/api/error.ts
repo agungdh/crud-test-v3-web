@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ApiError } from '../models/pegawai';
+import { ApiError } from '../models/api';
 
 const FALLBACK_MESSAGE = 'Terjadi kesalahan tak terduga. Coba lagi.';
 const OFFLINE_MESSAGE =

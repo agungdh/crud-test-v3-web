@@ -1,0 +1,33 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Edit Jenis Pelatihan' : 'Tambah Jenis Pelatihan' }}</h2>
+
+@if (saving()) {
+  <mat-progress-bar mode="indeterminate" />
+}
+
+<mat-dialog-content>
+  @if (errorMessage(); as message) {
+    <div class="alert" role="alert">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ message }}</span>
+    </div>
+  }
+
+  <form class="form-grid" [formGroup]="form" (ngSubmit)="save()">
+    <mat-form-field appearance="outline">
+      <mat-label>Nama</mat-label>
+      <input matInput formControlName="nama" maxlength="150" autocomplete="off" />
+      @if (form.controls.nama.hasError('required') || form.controls.nama.hasError('blank')) {
+        <mat-error>Nama wajib diisi.</mat-error>
+      } @else if (form.controls.nama.hasError('maxlength')) {
+        <mat-error>Nama maksimal 150 karakter.</mat-error>
+      }
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" mat-dialog-close [disabled]="saving()">Batal</button>
+  <button mat-flat-button type="button" [disabled]="saving()" (click)="save()">
+    {{ isEdit ? 'Simpan Perubahan' : 'Simpan' }}
+  </button>
+</mat-dialog-actions>

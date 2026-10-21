@@ -24,6 +24,15 @@
     <mat-icon class="chevron">chevron_right</mat-icon>
   </a>
 
+  <a class="shortcut" routerLink="/jenis-pelatihan">
+    <mat-icon class="shortcut-icon">category</mat-icon>
+    <div class="shortcut-text">
+      <strong>Jenis Pelatihan</strong>
+      <span>Kelola daftar jenis pelatihan untuk data diklat.</span>
+    </div>
+    <mat-icon class="chevron">chevron_right</mat-icon>
+  </a>
+
   <a class="shortcut" [href]="swaggerUrl" target="_blank" rel="noopener">
     <mat-icon class="shortcut-icon">api</mat-icon>
     <div class="shortcut-text">
@@ -33,6 +42,24 @@
     <mat-icon class="chevron">open_in_new</mat-icon>
   </a>
 </div>
+
+<section class="panel kegiatan-panel">
+  <header class="panel-head">
+    <div>
+      <h2>Kegiatan Pegawai</h2>
+      <p>Pilih jenis kegiatan untuk melihat dan mengelola datanya.</p>
+    </div>
+  </header>
+
+  <div class="kegiatan-links">
+    @for (kegiatan of kegiatanTypes; track kegiatan.slug) {
+      <a class="kegiatan-link" [routerLink]="['/', kegiatan.slug]">
+        <mat-icon>{{ kegiatan.icon }}</mat-icon>
+        <span>{{ kegiatan.label }}</span>
+      </a>
+    }
+  </div>
+</section>
 
 <section class="panel">
   <header class="panel-head">

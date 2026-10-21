@@ -1,0 +1,117 @@
+<section class="page-head">
+  <div>
+    <h1>Jenis Pelatihan</h1>
+    <p>Kelola daftar jenis pelatihan yang dipakai oleh data diklat.</p>
+  </div>
+  <button mat-flat-button type="button" (click)="openCreate()">
+    <mat-icon>add</mat-icon>
+    Tambah Jenis Pelatihan
+  </button>
+</section>
+
+<div class="toolbar">
+  <mat-form-field appearance="outline" class="search-field" subscriptSizing="dynamic">
+    <mat-label>Cari jenis pelatihan</mat-label>
+    <mat-icon matPrefix>search</mat-icon>
+    <input
+      matInput
+      type="search"
+      placeholder="Nama jenis pelatihan"
+      [formControl]="searchControl"
+      aria-label="Cari jenis pelatihan berdasarkan nama"
+    />
+    @if (searchControl.value) {
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        aria-label="Bersihkan pencarian"
+        (click)="clearSearch()"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    }
+  </mat-form-field>
+</div>
+
+@if (error(); as message) {
+  <div class="alert" role="alert">
+    <mat-icon>error_outline</mat-icon>
+    <span>{{ message }}</span>
+    <button mat-button type="button" (click)="load()">Coba lagi</button>
+  </div>
+}
+
+<section class="table-card">
+  @if (loading()) {
+    <mat-progress-bar mode="indeterminate" />
+  }
+
+  <div class="table-wrap">
+    <table mat-table [dataSource]="rows()" class="jenis-table">
+      <ng-container matColumnDef="nama">
+        <th mat-header-cell *matHeaderCellDef>Nama</th>
+        <td mat-cell *matCellDef="let row">{{ row.nama }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="aksi">
+        <th mat-header-cell *matHeaderCellDef class="aksi-head">Aksi</th>
+        <td mat-cell *matCellDef="let row" class="aksi-cell">
+          <button
+            mat-icon-button
+            type="button"
+            matTooltip="Edit jenis pelatihan"
+            [attr.aria-label]="'Edit ' + row.nama"
+            (click)="openEdit(row)"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            type="button"
+            class="danger"
+            matTooltip="Hapus jenis pelatihan"
+            [attr.aria-label]="'Hapus ' + row.nama"
+            (click)="deleteRow(row)"
+          >
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columns"></tr>
+      <tr mat-row *matRowDef="let row; columns: columns"></tr>
+
+      <tr class="no-data-row" *matNoDataRow>
+        <td [attr.colspan]="columns.length">
+          @if (loading()) {
+            Memuat jenis pelatihan...
+          } @else if (error()) {
+            Gagal memuat data. Coba lagi.
+          } @else if (searchControl.value) {
+            Tidak ada jenis pelatihan yang cocok dengan "{{ searchControl.value }}".
+          } @else {
+            Belum ada jenis pelatihan.
+          }
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div #sentinel class="scroll-sentinel" aria-hidden="true"></div>
+
+  @if (loadingMore()) {
+    <div class="load-more">
+      <mat-progress-bar mode="indeterminate" />
+      <span>Memuat data lainnya...</span>
+    </div>
+  } @else if (loadMoreError(); as message) {
+    <div class="load-more-error" role="alert">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ message }}</span>
+      <button mat-button type="button" (click)="retryLoadMore()">Coba lagi</button>
+    </div>
+  } @else if (!loading() && !hasMore() && rows().length > 0) {
+    <div class="end-of-list">Semua data sudah dimuat.</div>
+  }
+</section>

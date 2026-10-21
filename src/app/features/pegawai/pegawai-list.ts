@@ -25,8 +25,8 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { apiErrorMessage } from '../../core/api/error';
 import { PegawaiService } from '../../core/api/pegawai.service';
 import { GENDER_LABELS, Gender, Pegawai } from '../../core/models/pegawai';
+import { ConfirmDialog, ConfirmDialogData } from '../../core/ui/confirm-dialog';
 import { formatTanggal } from '../../core/utils/date';
-import { ConfirmDialog } from './confirm-dialog';
 import { DialogResult, PegawaiFormDialog } from './pegawai-form-dialog';
 
 @Component({
@@ -167,9 +167,19 @@ export class PegawaiList {
     this.openForm(pegawai);
   }
 
+  protected openKegiatan(pegawai: Pegawai): void {
+    void this.router.navigate(['/diklat'], {
+      queryParams: { pegawai_uuid: pegawai.uuid },
+    });
+  }
+
   protected deleteRow(pegawai: Pegawai): void {
-    const dialogRef = this.dialog.open<ConfirmDialog, Pegawai, boolean>(ConfirmDialog, {
-      data: pegawai,
+    const dialogRef = this.dialog.open<ConfirmDialog, ConfirmDialogData, boolean>(ConfirmDialog, {
+      data: {
+        title: 'Hapus Pegawai?',
+        message: `Data pegawai ${pegawai.nama} dengan NIP ${pegawai.nip} akan dihapus. Pegawai tidak akan tampil lagi di daftar.`,
+        confirmLabel: 'Hapus',
+      },
       width: '440px',
       maxWidth: '95vw',
     });

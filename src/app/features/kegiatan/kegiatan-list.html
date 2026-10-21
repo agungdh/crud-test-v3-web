@@ -1,0 +1,181 @@
+<section class="page-head">
+  <div>
+    <h1>{{ config.label }}</h1>
+    <p>{{ config.description }}</p>
+  </div>
+  <button mat-flat-button type="button" (click)="openCreate()">
+    <mat-icon>add</mat-icon>
+    Tambah {{ config.label }}
+  </button>
+</section>
+
+<div class="toolbar">
+  <mat-form-field appearance="outline" class="search-field" subscriptSizing="dynamic">
+    <mat-label>Cari {{ config.label }}</mat-label>
+    <mat-icon matPrefix>search</mat-icon>
+    <input
+      matInput
+      type="search"
+      [placeholder]="searchPlaceholder"
+      [formControl]="searchControl"
+      [attr.aria-label]="'Cari ' + config.label"
+    />
+    @if (searchControl.value) {
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        aria-label="Bersihkan pencarian"
+        (click)="clearSearch()"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="filter-field" subscriptSizing="dynamic">
+    <mat-label>Filter pegawai</mat-label>
+    <mat-icon matPrefix>person_search</mat-icon>
+    <input
+      matInput
+      [formControl]="pegawaiControl"
+      [matAutocomplete]="pegawaiAuto"
+      placeholder="Semua pegawai"
+      autocomplete="off"
+      aria-label="Filter berdasarkan pegawai"
+      (focus)="onPegawaiFocus()"
+    />
+    <mat-autocomplete
+      #pegawaiAuto="matAutocomplete"
+      [displayWith]="displayPegawai"
+      (optionSelected)="onPegawaiSelected($event.option.value)"
+    >
+      @for (pegawai of pegawaiOptions(); track pegawai.uuid) {
+        <mat-option [value]="pegawai">{{ pegawai.nama }} — {{ pegawai.nip }}</mat-option>
+      }
+      @if (pegawaiOptions().length === 0) {
+        <mat-option disabled>Tidak ada pegawai yang cocok.</mat-option>
+      }
+    </mat-autocomplete>
+    @if (pegawaiFilter()) {
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        aria-label="Hapus filter pegawai"
+        (click)="clearPegawaiFilter()"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    }
+  </mat-form-field>
+</div>
+
+@if (error(); as message) {
+  <div class="alert" role="alert">
+    <mat-icon>error_outline</mat-icon>
+    <span>{{ message }}</span>
+    <button mat-button type="button" (click)="load()">Coba lagi</button>
+  </div>
+}
+
+<section class="table-card">
+  @if (loading()) {
+    <mat-progress-bar mode="indeterminate" />
+  }
+
+  <div class="table-wrap">
+    <table mat-table [dataSource]="rows()" class="kegiatan-table">
+      <ng-container matColumnDef="pegawai">
+        <th mat-header-cell *matHeaderCellDef>Pegawai</th>
+        <td mat-cell *matCellDef="let row" class="pegawai-cell">
+          <span class="pegawai-nama">{{ pegawaiName(row.pegawai_uuid) }}</span>
+          @if (pegawaiNip(row.pegawai_uuid); as nip) {
+            <span class="pegawai-uuid">{{ nip }}</span>
+          }
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="nomor_surat">
+        <th mat-header-cell *matHeaderCellDef>No. Surat</th>
+        <td mat-cell *matCellDef="let row">{{ row.nomor_surat || '-' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="materi">
+        <th mat-header-cell *matHeaderCellDef>Materi Pengembangan</th>
+        <td mat-cell *matCellDef="let row" class="materi-cell">
+          {{ row.materi_pengembangan }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="tanggal">
+        <th mat-header-cell *matHeaderCellDef>Tanggal Pelaksanaan</th>
+        <td mat-cell *matCellDef="let row">{{ tanggalLabel(row) }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="jam">
+        <th mat-header-cell *matHeaderCellDef>Jumlah Jam</th>
+        <td mat-cell *matCellDef="let row">{{ jamLabel(row) }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="aksi">
+        <th mat-header-cell *matHeaderCellDef class="aksi-head">Aksi</th>
+        <td mat-cell *matCellDef="let row" class="aksi-cell">
+          <button
+            mat-icon-button
+            type="button"
+            matTooltip="Edit"
+            [attr.aria-label]="'Edit ' + row.materi_pengembangan"
+            (click)="openEdit(row)"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            type="button"
+            class="danger"
+            matTooltip="Hapus"
+            [attr.aria-label]="'Hapus ' + row.materi_pengembangan"
+            (click)="deleteRow(row)"
+          >
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columns"></tr>
+      <tr mat-row *matRowDef="let row; columns: columns"></tr>
+
+      <tr class="no-data-row" *matNoDataRow>
+        <td [attr.colspan]="columns.length">
+          @if (loading()) {
+            Memuat data {{ config.label }}...
+          } @else if (error()) {
+            Gagal memuat data. Coba lagi.
+          } @else if (searchControl.value || pegawaiFilter()) {
+            Tidak ada {{ config.label }} yang cocok dengan filter saat ini.
+          } @else {
+            Belum ada data {{ config.label }}.
+          }
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div #sentinel class="scroll-sentinel" aria-hidden="true"></div>
+
+  @if (loadingMore()) {
+    <div class="load-more">
+      <mat-progress-bar mode="indeterminate" />
+      <span>Memuat data lainnya...</span>
+    </div>
+  } @else if (loadMoreError(); as message) {
+    <div class="load-more-error" role="alert">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ message }}</span>
+      <button mat-button type="button" (click)="retryLoadMore()">Coba lagi</button>
+    </div>
+  } @else if (!loading() && !hasMore() && rows().length > 0) {
+    <div class="end-of-list">Semua data sudah dimuat.</div>
+  }
+</section>
