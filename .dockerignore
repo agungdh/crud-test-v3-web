@@ -1,0 +1,23 @@
+# Dependencies & build output
+node_modules
+dist
+.angular
+
+# VCS & tooling
+.git
+.gitignore
+.github
+.idea
+.vscode
+.editorconfig
+.prettierrc
+
+# Local env / logs
+*.log
+.env
+.env.*
+coverage
+
+# Docker files themselves
+Dockerfile
+.dockerignore
